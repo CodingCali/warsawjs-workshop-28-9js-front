@@ -1,6 +1,16 @@
 
 var actualVersion = '5'
 
+
+caches.keys().then(function(names) {
+    for (let name of names){
+        if(!(name==('storage-'+actualVersion) || name=='storage-posts')){
+            caches.delete(name);
+        }
+    }
+});
+
+
 self.addEventListener('install', function(event) {
     caches.open('storage-'+actualVersion).then((cacheOpened) => {
 
