@@ -1,20 +1,17 @@
 
-var actualVersion = '1'
+var actualVersion = '5'
 
 self.addEventListener('install', function(event) {
     caches.open('storage-'+actualVersion).then((cacheOpened) => {
 
         return cacheOpened.addAll([
+            '/',
             '/image/nointernet.gif'
         ])}
     )
 });
 
 self.addEventListener('fetch',function (event) {
-
-        event.respondWith(
-            caches.match('/image/nointernet.gif')
-        )
 
 
     // if (event.request.url.endsWith('.jpg')
@@ -31,4 +28,23 @@ self.addEventListener('fetch',function (event) {
     // }
 
 
+    event.respondWith(
+        caches.open('storage-'+actualVersion).then(cache=>(
+            cache.match(event.request).then(res=>{
+                return res || fetch(event.request).then(response=>{
+                    cache.put(event.request, response.clone())
+                    return response
+                })
+            })
+        ))
+    )
+
+
 })
+
+
+self.addEventListener('message', function (event) {
+    if (event.data.action === 'skipWaiting') {
+        self.skipWaiting();
+    }
+});
