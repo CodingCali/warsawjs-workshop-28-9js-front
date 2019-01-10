@@ -14,6 +14,12 @@ class App extends Component {
   componentDidMount() {
 
 
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then((sw)=>{
+
+      });
+    }
+
     if(!navigator.onLine){
       this.setState({
         ...this.state,
