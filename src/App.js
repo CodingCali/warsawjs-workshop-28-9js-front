@@ -55,12 +55,11 @@ class App extends Component {
     });
 
 
-    caches.open('name-cache').then(cache=>{
-        var file_name = `/image/nointernet.gif`
-        fetch(file_name).then(response=>{
-            cache.put(file_name, response.clone())
-        })
-    })
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      window.promptWindow = e;
+    });
 
   }
 

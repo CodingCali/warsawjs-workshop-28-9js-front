@@ -19,7 +19,12 @@ class Sidebar extends Component {
                                 <Link to="/favourite">My favourite</Link>
                             </li>
                             <li>
-                                <button id={"installApp"}>Install our application</button>
+                                <button
+                                    onClick={()=>{
+                                        if(this.prompt)
+                                            window.promptWindow.prompt();
+                                    }}
+                                    id={"installApp"}>Install our application</button>
                             </li>
                         </ul>
                     </nav>
