@@ -4,6 +4,7 @@ import Sidebar from './Sidebar'
 import PostList from './PostList'
 import PostFavList from './PostFavList'
 import './App.css';
+import {sendAllReguest} from './actions'
 
 class App extends Component {
 
@@ -35,6 +36,7 @@ class App extends Component {
         ...this.state,
         internetOnline: false
       })
+      sendAllReguest()
     }
 
     window.addEventListener('offline', (e) => {
@@ -49,6 +51,7 @@ class App extends Component {
         ...this.state,
         internetOnline: true
       })
+      sendAllReguest()
     });
 
 

@@ -142,3 +142,33 @@ export const getFavouriteIdInMap = ()=>{
             })
     })
 }
+
+
+//=====================
+
+
+export const sendAllReguest = () => {
+    dbPromise.then(db=> {
+        db.transaction('send-request')
+            .objectStore('send-request')
+            .getAll().then((res)=>{
+            res.map((item)=>{
+                fetch(
+                    item.url,
+                    {
+                        'method': item.method,
+                        headers: {  'Content-Type': 'application/json' },
+                        body: item.body
+                    }
+                )
+
+                db.transaction('send-request', 'readwrite')
+                    .objectStore('send-request')
+                    .delete(item.id)
+
+
+                return false
+            })
+        });
+    })
+}
