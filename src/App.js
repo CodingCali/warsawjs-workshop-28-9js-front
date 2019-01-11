@@ -17,18 +17,18 @@ class App extends Component {
   componentDidMount() {
 
 
-    // if ('serviceWorker' in navigator) {
-    //   navigator.serviceWorker.register('/sw.js').then((sw)=>{
-    //     if(sw.waiting){
-    //       this.newWorker = sw.waiting
-    //       this.setState({
-    //         ...this.state,
-    //         newServiceWorker: true
-    //
-    //       })
-    //     }
-    //   });
-    // }
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then((sw)=>{
+        if(sw.waiting){
+          this.newWorker = sw.waiting
+          this.setState({
+            ...this.state,
+            newServiceWorker: true
+
+          })
+        }
+      });
+    }
 
     if(!navigator.onLine){
       this.setState({
