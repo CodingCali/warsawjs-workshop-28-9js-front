@@ -96,8 +96,33 @@ export const voteForPost = (post, callback = ()=>{})=>{
                 likes: likes
             })
         }
-    )
+    ).catch(()=>{
+        saveRequest(
+            `${process.env.REACT_APP_SERVER_BACK}/posts/${post.id}`,
+            "PUT",
+            {
+                ...post.data,
+                likes: likes
+            }
+        )
+    })
 
+}
+
+//=====================
+
+
+export const saveRequest = (url, method, body) => {
+    dbPromise.then(db=> {
+        db.transaction('send-request', 'readwrite')
+            .objectStore('send-request')
+            .put({
+                url: url,
+                method: method,
+                body: JSON.stringify(body)
+            });
+
+    })
 }
 
 //=========================
