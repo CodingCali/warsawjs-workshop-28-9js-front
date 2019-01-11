@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PostView from './posts/postView'
+import {dbPromise} from './idb';
 
 
 
@@ -10,7 +11,6 @@ class PostList extends Component {
 
     state = {
         posts: [],
-        notNewPost: true,
         noPostCaches: false
     }
 
@@ -20,6 +20,8 @@ class PostList extends Component {
 
 
     loadPage = ()=>{
+        if(this.state.noPostCaches)
+            return
 
         fetch(
             `${process.env.REACT_APP_SERVER_BACK}/posts/?_page=${this.defaultPage++}}&_limit=4&_sort=createdAt&_order=asc`,
@@ -31,25 +33,52 @@ class PostList extends Component {
                 }
             }
         ).then(res=>res.json()).then((res)=>{
-            var posts = this.state.posts
-            res.map((item)=>{
-                posts.push({
-                    id: item.id,
-                    createdAt: item.createdAt,
-                    likes: item.likes,
-                    data: {...item}
-                })
-                return item
-            })
+            dbPromise.then(db=>{
+                if(res.length===0){
+                    this.setState({
+                        ...this.state,
+                        noPostCaches: true
+                    })
+                    throw "not more posts"
+                }
 
-            this.setState({
-                ...this.state,
-                noPostCaches: res.length===0 ? true: false,
-                posts
-            })
+
+                var tx = db.transaction('posts', 'readwrite')
+                res.map(item=>{
+                    tx.objectStore('posts').put({
+                        id: item.id,
+                        createdAt: item.createdAt,
+                        likes: item.likes,
+                        data: {...item}
+                    });
+                    return false
+                })
+
+
+            }).then(()=>{
+                this.readContentFromIdb()
+            }).catch(()=>{})
+
 
         })
     }
+
+
+    readContentFromIdb = () => {
+        dbPromise.then(db => {
+            //all
+            return db.transaction('posts')
+                .objectStore('posts').getAll();
+        }).then((item) => {
+
+            this.setState({
+                ...this.state,
+                posts: item
+            })
+        })
+
+    }
+
 
     render() {
 
