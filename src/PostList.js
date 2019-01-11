@@ -11,6 +11,7 @@ class PostList extends Component {
 
     state = {
         posts: [],
+        order: "by-date",
         noPostCaches: false
     }
 
@@ -39,7 +40,7 @@ class PostList extends Component {
                         ...this.state,
                         noPostCaches: true
                     })
-                    throw "not more posts"
+                    throw Error("not more posts")
                 }
 
 
@@ -68,8 +69,11 @@ class PostList extends Component {
         dbPromise.then(db => {
             //all
             return db.transaction('posts')
-                .objectStore('posts').getAll();
+                .objectStore('posts').index(this.state.order).getAll();
         }).then((item) => {
+            if(this.state.order === 'by-likes')
+                item.reverse()
+
 
             this.setState({
                 ...this.state,
@@ -79,6 +83,21 @@ class PostList extends Component {
 
     }
 
+
+
+    changeOrder = ()=>{
+        if(this.state.order==='by-date'){
+            this.setState({
+                ...this.state,
+                order: 'by-likes'
+            },()=>this.readContentFromIdb())
+        }else{
+            this.setState({
+                ...this.state,
+                order: 'by-date'
+            },()=>this.readContentFromIdb())
+        }
+    }
 
     render() {
 
@@ -90,10 +109,14 @@ class PostList extends Component {
                 </h1>
                 <h4 className={"subheader"}>Order by</h4>
                 <div className="orderOption">
-                    <button>
+                    <button
+                        onClick={this.changeOrder}
+                        className={this.state.order==='by-date'?"active":""}>
                         By date
                     </button>
-                    <button>
+                    <button
+                        onClick={this.changeOrder}
+                        className={this.state.order==='by-likes'?"active":""}>
                         By likes
                     </button>
                 </div>
