@@ -85,6 +85,19 @@ export const voteForPost = (post, callback = ()=>{})=>{
         })
     })
 
+
+    fetch(
+        `${process.env.REACT_APP_SERVER_BACK}/posts/${post.id}`,
+        {
+            'method': 'PUT',
+            headers: {  'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ...post.data,
+                likes: likes
+            })
+        }
+    )
+
 }
 
 //=========================
