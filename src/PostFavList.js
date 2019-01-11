@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PostView from "./posts/postView";
+import {dbPromise} from './idb';
 
 
 class PostFavList extends Component {
@@ -12,7 +13,20 @@ class PostFavList extends Component {
     }
 
     componentDidMount(){
+        this.readContentFromIdb()
+    }
 
+    readContentFromIdb = () => {
+        dbPromise.then(db => {
+            return db.transaction('posts-fav')
+                .objectStore('posts-fav').getAll();
+        }).then((item)=>{
+                this.setState({
+                    ...this.state,
+                    posts: item
+                })
+            }
+        )
     }
 
     render() {
