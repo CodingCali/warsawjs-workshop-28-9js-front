@@ -59,6 +59,34 @@ export const deleteImageFromCache = (image) => {
     })
 }
 
+//==================
+
+export const voteForPost = (post, callback = ()=>{})=>{
+    var likes = post.likes+1
+
+    dbPromise.then(db=> {
+        db.transaction('posts')
+            .objectStore('posts')
+            .get(post.id).then((res)=>{
+            db.transaction('posts', 'readwrite')
+                .objectStore('posts')
+                .put({
+                    id: post.id,
+                    ...res,
+                    likes: likes
+                }).then(()=>callback())
+            db.transaction('posts-fav', 'readwrite')
+                .objectStore('posts-fav')
+                .put({
+                    id: post.id,
+                    ...res,
+                    likes: likes
+                }).then(()=>callback())
+        })
+    })
+
+}
+
 //=========================
 
 export const getFavouriteIdInMap = ()=>{

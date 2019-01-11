@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {favouriteClick} from './../actions'
+import {favouriteClick, voteForPost} from './../actions'
 
 class PostView extends Component {
     render() {
@@ -27,7 +27,7 @@ class PostView extends Component {
                 }
                 </main>
                 <footer>
-                        <button>
+                        <button onClick={()=>voteForPost(this.props.post, this.props.reloadIndexDb)}>
                             <i className="fas fa-thumbs-up"></i> {this.props.post.likes}
                         </button>
                         <button
