@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {favouriteClick} from './../actions'
 
 class PostView extends Component {
     render() {
@@ -29,7 +30,13 @@ class PostView extends Component {
                         <button>
                             <i className="fas fa-thumbs-up"></i> {this.props.post.likes}
                         </button>
-                        <button>
+                        <button
+                            onClick={
+                                ()=>{
+                                    favouriteClick(this.props.post, this.props.reloadIndexDb)
+
+                                }}
+                            >
                             <i className="far fa-heart"></i> Add to favourite
                         </button>
                     {(this.props.post.data.author)?(
