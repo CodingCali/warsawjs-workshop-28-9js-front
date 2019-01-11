@@ -38,7 +38,7 @@ class PostView extends Component {
                                 }}
 
                             className={
-                                this.props.listFacouriteId.has(this.props.post.data.id)? 'favourite':''
+                                this.props.allFavourite || this.props.listFacouriteId.has(this.props.post.data.id)? 'favourite':''
                             }
                             >
                             <i className="far fa-heart"></i> Add to favourite
