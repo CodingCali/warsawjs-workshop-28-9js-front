@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PostView from './posts/postView'
 import {dbPromise} from './idb';
+import {getFavouriteIdInMap} from './actions'
 
 
 
@@ -12,7 +13,8 @@ class PostList extends Component {
     state = {
         posts: [],
         order: "by-date",
-        noPostCaches: false
+        noPostCaches: false,
+        listFacouriteId: new Map()
     }
 
     componentDidMount(){
@@ -78,6 +80,14 @@ class PostList extends Component {
             this.setState({
                 ...this.state,
                 posts: item
+            },()=>{
+                //update favourite state
+                getFavouriteIdInMap().then(res=>{
+                    this.setState({
+                        ...this.state,
+                        listFacouriteId: res || new Map()
+                    })
+                })
             })
         })
 

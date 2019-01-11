@@ -36,6 +36,10 @@ class PostView extends Component {
                                     favouriteClick(this.props.post, this.props.reloadIndexDb)
 
                                 }}
+
+                            className={
+                                this.props.listFacouriteId.has(this.props.post.data.id)? 'favourite':''
+                            }
                             >
                             <i className="far fa-heart"></i> Add to favourite
                         </button>
